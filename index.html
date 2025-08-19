@@ -28,3 +28,138 @@
     </button>
   </div>
 </div>
+<!-- Safety Banner -->
+<section class="safety">
+  <img src="assets/icons/high-voltage.svg" alt="High voltage" class="safety__icon"/>
+  <div>
+    <p class="safety__text" data-en="⚠️ High Voltage — For professionals only."
+       data-am="⚠️ ከፍተኛ የኤሌክትሪክ ኃይል — ባለሙያዎች ብቻ ይንኩት።">
+       ⚠️ High Voltage — For professionals only.
+    </p>
+  </div>
+</section>
+
+<!-- Categories -->
+<section id="categories" class="section container">
+  <h3 class="section__title" data-en="EV Categories" data-am="የኤሌክትሪክ ተሽከርካሪ ክፍሎች">EV Categories</h3>
+  <div id="categoryGrid" class="grid grid--6"></div>
+</section>
+
+<!-- Vehicle Finder -->
+<section id="finder" class="section section--alt">
+  <div class="container">
+    <h3 class="section__title" data-en="Vehicle Finder" data-am="ተሽከርካሪ መፈለጊያ">Vehicle Finder</h3>
+    <div class="finder">
+      <select id="makeSelect"></select>
+      <select id="modelSelect" disabled></select>
+      <select id="yearSelect"></select>
+      <button id="findPartsBtn" class="btn btn--primary" data-en="Find EV Parts" data-am="የኤቪ ክፍሎችን ያግኙ">Find EV Parts</button>
+    </div>
+  </div>
+</section>
+
+<!-- Products -->
+<section class="section container">
+  <h3 class="section__title" data-en="Featured EV Parts" data-am="ተለይተው የቀረቡ የኤቪ ክፍሎች">Featured EV Parts</h3>
+  <div class="filters">
+    <div class="filter">
+      <label data-en="Category" data-am="ምድብ">Category</label>
+      <select id="filterCategory"></select>
+    </div>
+    <div class="filter">
+      <label data-en="Max Price" data-am="ከፍተኛ ዋጋ">Max Price</label>
+      <input type="number" id="filterPrice" min="0" value="30000"/>
+    </div>
+    <div class="filter">
+      <label data-en="Stock" data-am="መጋዘን">Stock</label>
+      <select id="filterStock">
+        <option value="any" data-en="Any" data-am="ማንኛውም">Any</option>
+        <option value="in" data-en="In Stock" data-am="በመጋዘን አለ">In Stock</option>
+        <option value="low" data-en="Low Stock" data-am="አነስተኛ መጠን">Low Stock</option>
+      </select>
+    </div>
+    <div class="filter">
+      <label data-en="Sort by" data-am="ደርድር እንደ">Sort by</label>
+      <select id="sortBy">
+        <option value="name" data-en="Name" data-am="ስም">Name</option>
+        <option value="priceAsc" data-en="Price: Low to High" data-am="ዋጋ፡ ታናሽ ወደ ታላቅ">Price: Low to High</option>
+        <option value="priceDesc" data-en="Price: High to Low" data-am="ዋጋ፡ ታላቅ ወደ ታናሽ">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+  <div id="productGrid" class="grid grid--4"></div>
+</section>
+
+<!-- Dealers -->
+<section id="dealers" class="section section--alt">
+  <div class="container">
+    <h3 class="section__title" data-en="Dealers" data-am="ሻጮች">Dealers</h3>
+    <div id="dealerList" class="dealer-list"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="section container">
+  <h3 class="section__title" data-en="About Speedy Spare Parts" data-am="ስለ ስፒዲ የክፍል እቃዎች">About Speedy Spare Parts</h3>
+  <p data-en="Speedy Spare Parts supplies safe, compatible EV components for Ethiopia with bilingual support and local service."
+     data-am="ስፒዲ የክፍል እቃዎች ለኢትዮጲያ ደህንነቱ የተጠበቀ እና ተዛማጅ የኤቪ ክፍሎችን በሁለት ቋንቋ ድጋፍ እና በአካባቢ አገልግሎት ይሰጣል።">
+    Speedy Spare Parts supplies safe, compatible EV components for Ethiopia with bilingual support and local service.
+  </p>
+  <ul class="about__bullets">
+    <li data-en="Focus on safety and quality" data-am="በደህንነት እና በጥራት ላይ እንዳተኩራለን">Focus on safety and quality</li>
+    <li data-en="EV compatibility and technical clarity" data-am="የኤቪ ተዛማጅነት እና ቴክኒክ ግልጽነት">EV compatibility and technical clarity</li>
+    <li data-en="Local support and fast response" data-am="የአካባቢ ድጋፍ እና ፈጣን ምላሽ">Local support and fast response</li>
+  </ul>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="section section--contact">
+  <div class="container contact__grid">
+    <div>
+      <h3 class="section__title" data-en="Contact" data-am="አግኙን">Contact</h3>
+      <p data-en="We respond quickly to inquiries about EV parts, orders, and compatibility." 
+         data-am="ስለ የኤቪ ክፍሎች፣ ትእዛዞች እና ተዛማጅነት ጥያቄዎች በፍጥነት እንመልሳለን።">
+        We respond quickly to inquiries about EV parts, orders, and compatibility.
+      </p>
+
+      <div class="contact__methods">
+        <a class="contact__btn" target="_blank" rel="noopener" 
+           href="https://wa.me/447752660256?text=Hello%20Speedy%20Spare%20Parts%20—%20I%E2%80%99m%20interested%20in%20EV%20parts"
+           aria-label="WhatsApp">
+          <img src="assets/icons/whatsapp.svg" alt="WhatsApp"/> WhatsApp: 00447752660256
+        </a>
+        <a class="contact__btn" href="mailto:djamauk@gmail.com?subject=EV%20Parts%20Inquiry&body=Hello%20Speedy%20Spare%20Parts,"
+           aria-label="Email">
+          <img src="assets/icons/email.svg" alt="Email"/> Email: djamauk@gmail.com
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <form id="contactForm" class="form" method="POST" action="https://formspree.io/f/your-form-id">
+        <div class="form__row">
+          <label data-en="Name" data-am="ስም">Name</label>
+          <input name="name" type="text" required placeholder="Your name"/>
+        </div>
+        <div class="form__row">
+          <label data-en="Phone" data-am="ስልክ">Phone</label>
+          <input name="phone" type="tel" placeholder="+251-..."/>
+        </div>
+        <div class="form__row">
+          <label data-en="Email" data-am="ኢሜል">Email</label>
+          <input name="email" type="email" required placeholder="name@example.com"/>
+        </div>
+        <div class="form__row">
+          <label data-en="Message" data-am="መልዕክት">Message</label>
+          <textarea name="message" rows="4" required placeholder="Order or inquiry details"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit" data-en="Send" data-am="ላክ">Send</button>
+        <p id="formStatus" class="form__status" aria-live="polite"></p>
+      </form>
+      <p class="form__note" data-en="Note: Replace the form action with your Formspree endpoint to receive emails."
+         data-am="ማስታወሻ፡ ኢሜሎችን ለመቀበል የፎርም እርምጃውን በየእርስዎ የFormspree መስመር ጫን ይቀይሩ።">
+         Note: Replace the form action with your Formspree endpoint to receive emails.
+      </p>
+    </div>
+  </div>
+</section>
