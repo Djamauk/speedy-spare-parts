@@ -25,9 +25,7 @@ vehicles: [
 { make: 'MG', models: ['ZS EV','MG4 EV','Marvel R','HS EV'] },
 { make: 'MAXUS', models: ['EV30','EV80','EV90','eDeliver 3'] }
 ],
-// Add your real product objects here following this structure
 products: [
-// Example products (safe to keep or replace with your own)
 {
 id: 1,
 name: 'EV Charging Cable Type 2',
@@ -62,7 +60,6 @@ spec: { max_current: '800A', voltage_range: '96-144V', power: '120kW', eff: '98%
 safety: '⚠️ High Voltage — Professional install'
 }
 ],
-// Add your real dealers here following this structure
 dealers: [
 { name: 'EV Parts Ethiopia', name_am: 'ኤሌክትሪክ ተሽከርካሪ ክፍሎች ኢትዮጲያ', location: 'Addis Ababa - Bole', location_am: 'አዲስ አበባ - ቦሌ', phone: '+251-11-345-6789', spec: 'Battery & Electronics' },
 { name: 'Green Auto Solutions', name_am: 'አረንጓዴ የመኪና መፍትሄዎች', location: 'Addis Ababa - Merkato', location_am: 'አዲስ አበባ - መርካቶ', phone: '+251-11-456-7890', spec: 'Motor & Thermal' }
@@ -206,15 +203,15 @@ const sort = (document.getElementById('sortBy') || {}).value || 'name';
 
 let list = [...state.data.products];
 
-// Simple category mapping example (adjust as needed)
+// Simple category mapping for the sample products
 if (selCat) {
   const map = {
-    1: ,      // Battery & Charging
-    2: ,         // Electric Motor
-    3: [],          // Thermal Management
-    4: [],          // Brake System
-    5: [],          // Electronics & Control
-    6: []           // Body & Interior
+    1: ,  // Battery & Charging
+    2: ,     // Electric Motor (using controller as example)
+    3: [],
+    4: [],
+    5: [],
+    6: []
   };
   const ids = map[Number(selCat)] || [];
   list = list.filter((p) => ids.includes(p.id));
@@ -359,7 +356,7 @@ if (!grid) return;
 grid.innerHTML = list.map((p) => <div class="card"> <img src="${p.img}" alt="${p.name}" class="card__img" loading="lazy"/> <div class="card__body"> <h4 class="card__title">${p.name}</h4> <div class="card__meta">${p.brand}</div> <div class="price"> <span class="price__now">${fmtETB(p.price)}</span> <span class="price__old">${fmtETB(p.oldPrice)}</span> <span class="badge">${p.badge}</span> </div> <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"> <button class="btn btn--primary" data-add="${p.id}"> ${state.lang === 'am' ? 'ወደ ሳጥን ጨምር' : 'Add to Cart'} </button> <button class="btn" data-view="${p.id}"> ${state.lang === 'am' ? 'ዝርዝር' : 'Details'} </button> </div> </div> </div> ).join('') || <p>${state.lang === 'am' ? 'ምንም ውጤት አልተገኘም።' : 'No results found.'}</p>;
 
 text
-  // rebind events
+  // rebind
   $$('#productGrid [data-add]').forEach((b) => b.addEventListener('click', () =>
     alert(state.lang === 'am' ? 'ወደ ሳጥን ታክሏል።' : 'Added to cart.')
   ));
