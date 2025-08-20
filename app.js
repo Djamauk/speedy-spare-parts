@@ -127,7 +127,8 @@ dealers: [
 const $ = (sel, root=document) => root.querySelector(sel);
 const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 const fmtETB = (v) => ${v.toLocaleString()} ${state.lang==='am'?'ብር':'ETB'};
-
+} 
+             
 function init() {
 document.documentElement.classList.add('smooth');
 $('#year').textContent = new Date().getFullYear();
