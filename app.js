@@ -145,6 +145,7 @@ applyLanguage(); // set initial language
 
 function init() {
 document.documentElement.classList.add('smooth');
+
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -157,7 +158,7 @@ renderDealers();
 bindSearch();
 bindFilters();
 setupAnchorScroll();
-applyLanguage(); // set initial language
+applyLanguage(); // set initial language after DOM wiring
 }
 
 function bindLanguageToggle() {
@@ -166,9 +167,11 @@ langButtons.forEach((btn) => {
 btn.addEventListener('click', () => {
 langButtons.forEach((b) => b.classList.remove('active'));
 btn.classList.add('active');
-state.lang = btn.dataset.lang === 'am' ? 'am' : 'en';
+const lang = btn.getAttribute('data-lang');
+// Fallback to 'en' if anything unexpected
+state.lang = lang === 'am' ? 'am' : 'en';
 applyLanguage();
-// re-render sections that have language-dependent content
+// Re-render any language-dependent UI
 renderProducts(true);
 renderDealers();
 populateCategories();
@@ -178,15 +181,69 @@ populateFilters();
 }
 
 function applyLanguage() {
-// Text content swaps
+// Swap inner text for elements with data-en / data-am
 document.querySelectorAll('[data-en]').forEach((el) => {
-const txt = state.lang === 'am' ? el.getAttribute('data-am') : el.getAttribute('data-en');
-if (txt !== null && txt !== undefined) el.textContent = txt;
+const en = el.getAttribute('data-en');
+const am = el.getAttribute('data-am');
+const out = state.lang === 'am' ? am : en;
+if (out !== null && out !== undefined) el.textContent = out;
 });
-// Placeholder swaps
+// Swap placeholders
 document.querySelectorAll('[data-ph-en]').forEach((el) => {
-const ph = state.lang === 'am' ? el.getAttribute('data-ph-am') : el.getAttribute('data-ph-en');
-if (ph !== null && ph !== undefined) el.placeholder = ph;
+const phEn = el.getAttribute('data-ph-en');
+const phAm = el.getAttribute('data-ph-am');
+el.placeholder = state.lang === 'am' ? (phAm || phEn || '') : (phEn || phAm || '');
+});
+}
+
+function populateVehicleFinder() {
+const makeSel = document.getElementById('makeSelect');
+const modelSel = document.getElementById('modelSelect');
+const yearSel = document.getElementById('yearSelect');
+const btn = document.getElementById('findPartsBtn');
+
+if (!makeSel || !modelSel || !yearSel || !btn) return;
+
+const makePlaceholder = state.lang === 'am' ? 'ምርጫ አድርጉ' : 'Select Make';
+makeSel.innerHTML = <option value="">${makePlaceholder}</option> +
+state.data.vehicles.map((v) => <option value="${v.make}">${v.make}</option>).join('');
+
+modelSel.disabled = true;
+modelSel.innerHTML = '';
+
+makeSel.addEventListener('change', () => {
+const make = makeSel.value;
+modelSel.disabled = !make;
+if (!make) {
+modelSel.innerHTML = '';
+return;
+}
+const models = (state.data.vehicles.find((v) => v.make === make) || { models: [] }).models;
+const modelPlaceholder = state.lang === 'am' ? 'ሞዴል ይምረጡ' : 'Select Model';
+modelSel.innerHTML = <option value="">${modelPlaceholder}</option> +
+models.map((m) => <option value="${m}">${m}</option>).join('');
+});
+
+const now = new Date().getFullYear();
+const endYear = Math.max(now, 2025);
+const years = [];
+for (let y = 2018; y <= endYear; y++) {
+years.push(y);
+}
+yearSel.innerHTML = years.map((y) => <option value="${y}">${y}</option>).join('');
+
+btn.addEventListener('click', () => {
+const make = makeSel.value;
+const model = modelSel.value;
+if (make && model) {
+alert(state.lang === 'am'
+? ለ ${make} ${model} ክፍሎች ተገኝተዋል።
+: Filtered parts for ${make} ${model}.);
+} else {
+alert(state.lang === 'am'
+? 'እባክዎን ምርት እና ሞዴል ይምረጡ።'
+: 'Please select make and model.');
+}
 });
 }
 
