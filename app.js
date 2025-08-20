@@ -1,66 +1,225 @@
-/* Minimal stable JS to verify loading and anchors */
-const App = (() => {
-const state = {
-lang: 'en',
-data: {
-categories: [
-{ id: 1, name: 'Battery & Charging', name_am: 'ባትሪ እና ኃይል መሙላት', icon: 'assets/categories/battery.svg' },
-{ id: 2, name: 'Electric Motor', name_am: 'የኤሌክትሪክ ሞተር', icon: 'assets/categories/motor.svg' },
-{ id: 3, name: 'Thermal Management', name_am: 'የሙቀት አስተዳደር', icon: 'assets/categories/thermal.svg' },
-{ id: 4, name: 'Brake System', name_am: 'የብሬክ ስርዓት', icon: 'assets/categories/brake.svg' },
-{ id: 5, name: 'Electronics & Control', name_am: 'ኤሌክትሮኒክስ እና ቁጥጥር', icon: 'assets/categories/electronics.svg' },
-{ id: 6, name: 'Body & Interior', name_am: 'ቅርፅ እና ውስጠኛ ክፍል', icon: 'assets/categories/body.svg' }
-],
-dealers: [
-{ name: 'EV Parts Ethiopia', name_am: 'ኤሌክትሪክ ተሽከርካሪ ክፍሎች ኢትዮጲያ', location: 'Addis Ababa - Bole', location_am: 'አዲስ አበባ - ቦሌ', phone: '+251-11-345-6789', spec: 'Battery & Electronics' },
-{ name: 'Green Auto Solutions', name_am: 'አረንጓዴ የመኪና መፍትሄዎች', location: 'Addis Ababa - Merkato', location_am: 'አዲስ አበባ - መርካቶ', phone: '+251-11-456-7890', spec: 'Motor & Thermal' }
-]
-}
-};
+/* Speedy Spare Parts — simple catalog with pagination */
+const CatalogApp = (() => {
+  const state = {
+    page: 1,
+    perPage: 12,
+    q: '',
+    category: '',
+    maxPrice: 9999,
+    products: []
+  };
 
-const $ = (sel, root = document) => root.querySelector(sel);
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-function renderCategories() {
-const wrap = $('#categoryGrid');
-if (!wrap) return;
-wrap.innerHTML = '';
-state.data.categories.forEach((cat) => {
-const div = document.createElement('div');
-div.className = 'card';
-div.innerHTML = <img src="${cat.icon}" alt="${cat.name}" class="card__img" loading="lazy"/> <div class="card__body"> <h4 class="card__title">${state.lang === 'am' ? cat.name_am : cat.name}</h4> <span class="badge">EV</span> </div> ;
-wrap.appendChild(div);
-});
-}
+  function init() {
+    wireUI();
+    loadProducts();
+  }
 
-function renderDealers() {
-const list = document.getElementById('dealerList');
-if (!list) return;
-list.innerHTML = state.data.dealers.map((d) => <div class="dealer"> <h4 class="dealer__title">${state.lang === 'am' ? d.name_am : d.name}</h4> <p class="dealer__meta">${state.lang === 'am' ? d.location_am : d.location}</p> <p class="dealer__meta">${d.phone}</p> <span class="badge">${d.spec}</span> </div> ).join('');
-}
+  function wireUI() {
+    $('#searchBtn')?.addEventListener('click', ()=>{
+      state.q = ($('#q')?.value||'').trim();
+      state.page = 1;
+      applyAndRender();
+    });
+    $('#applyFilters')?.addEventListener('click', ()=>{
+      state.category = $('#fCategory')?.value||'';
+      state.maxPrice = Number($('#fMaxPrice')?.value||9999);
+      state.page = 1;
+      applyAndRender();
+    });
+  }
 
-function setupAnchorScroll() {
-document.querySelectorAll('.nav__link').forEach((a) => {
-a.addEventListener('click', (e) => {
-const href = a.getAttribute('href') || '';
-if (href.startsWith('#')) {
-e.preventDefault();
-const el = document.querySelector(href);
-if (el) window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
-}
-});
-});
-}
+  function loadProducts() {
+    state.products = demoProducts();
+    renderCategoryFilter();
+    applyAndRender();
+  }
 
-function init() {
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-renderCategories();
-renderDealers();
-setupAnchorScroll();
-console.log('Minimal app.js loaded');
-}
+  function renderCategoryFilter() {
+    const sel = $('#fCategory');
+    if (!sel) return;
+    const cats = Array.from(new Set(state.products.map(p => p.category || 'Other'))).sort();
+    sel.innerHTML = '<option value="">All</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
 
-return { init };
+  function applyAndRender() {
+    let list = [...state.products];
+
+    if (state.q) {
+      const q = state.q.toLowerCase();
+      list = list.filter(p =>
+        (p.title||'').toLowerCase().includes(q) ||
+        (p.oemNo||'').toLowerCase().includes(q) ||
+        (p.app||'').toLowerCase().includes(q)
+      );
+    }
+
+    if (state.category) list = list.filter(p => (p.category||'') === state.category);
+
+    list = list.filter(p => {
+      const minTier = p.priceTiers?.reduce((m,t)=>Math.min(m, t.price), Infinity);
+      return minTier <= state.maxPrice;
+    });
+
+    renderGrid(list);
+    renderPagination(list.length);
+  }
+
+  function renderGrid(list) {
+    const grid = $('#grid');
+    const tpl = $('#cardTpl');
+    if (!grid || !tpl) return;
+
+    const start = (state.page-1)*state.perPage;
+    const items = list.slice(start, start + state.perPage);
+
+    grid.innerHTML = '';
+    items.forEach(p => {
+      const node = tpl.content.cloneNode(true);
+      const img = node.querySelector('img');
+      const title = node.querySelector('.title');
+      const oem = node.querySelector('.oem');
+      const app = node.querySelector('.app');
+      const moq = node.querySelector('.moq');
+      const dDate = node.querySelector('.dDate');
+      const rows = node.querySelector('.tierRows');
+      const buy = node.querySelector('.buy');
+
+      img.src = p.img;
+      img.alt = p.title;
+      title.textContent = p.title;
+      oem.textContent = p.oemNo || '-';
+      app.textContent = p.app || '-';
+      moq.textContent = p.moq ? `MOQ:${p.moq}` : '-';
+      dDate.textContent = p.deliveryDays ? `${p.deliveryDays} Day` : '-';
+
+      rows.innerHTML = p.priceTiers.map(t => `
+        <div class="tier">
+          <span>${t.min === 1 ? '1 - ' + (t.max??'∞') : `${t.min}${t.max? ' - ' + t.max : ' +'}`} Pcs</span>
+          <span>US$ ${t.price.toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      buy.addEventListener('click', () => {
+        alert(`Buy: ${p.title}\nOEM: ${p.oemNo||'-'}`);
+      });
+
+      grid.appendChild(node);
+    });
+
+    if (items.length === 0) {
+      grid.innerHTML = '<p style="color:#93a0ae">No products found.</p>';
+    }
+  }
+
+  function renderPagination(total) {
+    const wrap = $('#pagination');
+    if (!wrap) return;
+    const pages = Math.max(1, Math.ceil(total / state.perPage));
+    state.page = Math.min(state.page, pages);
+
+    const btn = (n, label) => `<button class="page-btn ${n===state.page?'active':''}" data-p="${n}">${label??n}</button>`;
+    let html = '';
+    if (pages > 1) {
+      html += btn(Math.max(1, state.page-1), 'Prev');
+      for (let i=1;i<=pages;i++){
+        if (i===1 || i===pages || Math.abs(i-state.page)<=2) html += btn(i);
+        else if (!html.endsWith('…')) html += '<span style="color:#93a0ae;margin:0 4px">…</span>';
+      }
+      html += btn(Math.min(pages, state.page+1), 'Next');
+    }
+    wrap.innerHTML = html;
+    $$('[data-p]').forEach(b=>b.addEventListener('click', ()=>{
+      state.page = Number(b.dataset.p);
+      applyAndRender();
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }));
+  }
+
+  function demoProducts() {
+    const base = 'assets/products/';
+    return [
+      {
+        id: 101,
+        title: 'Handle Switch Assembly',
+        category: 'Electrical',
+        oemNo: '35200-KVS-601',
+        app: 'TITAN 150 2009 ES LH',
+        moq: 100,
+        deliveryDays: 30,
+        img: base + 'ev-display.jpg',
+        priceTiers: [
+          {min:1,max:1000,price:1.76},
+          {min:1000,max:10000,price:1.63},
+          {min:10000,max:null,price:1.50}
+        ]
+      },
+      {
+        id: 102,
+        title: 'Ignition Coil (Iridium)',
+        category: 'Engine',
+        oemNo: 'BR7HIX',
+        app: 'TYPE: Iridium',
+        moq: 3000,
+        deliveryDays: 60,
+        img: base + 'motor-controller.jpg',
+        priceTiers: [
+          {min:1,max:1000,price:1.32},
+          {min:1000,max:10000,price:1.23},
+          {min:10000,max:null,price:1.13}
+        ]
+      },
+      {
+        id: 103,
+        title: 'Brake Disc 220*',
+        category: 'Brake',
+        oemNo: '225160070',
+        app: 'HONDA 45351GBY910ZA',
+        moq: 100,
+        deliveryDays: 60,
+        img: base + 'ev-brake-pads.jpg',
+        priceTiers: [
+          {min:1,max:1000,price:4.77},
+          {min:1000,max:10000,price:4.41},
+          {min:10000,max:null,price:4.06}
+        ]
+      },
+      {
+        id: 104,
+        title: 'V-Belt 6PK1065',
+        category: 'Belt',
+        oemNo: '6PK*1065',
+        app: 'Tara',
+        moq: 100,
+        deliveryDays: 60,
+        img: base + 'hv-cable.jpg',
+        priceTiers: [
+          {min:1,max:1000,price:2.61},
+          {min:1000,max:10000,price:2.41},
+          {min:10000,max:null,price:2.22}
+        ]
+      },
+      ...Array.from({length:20}).map((_,i)=>({
+        id: 200+i,
+        title: 'Switch Assy Variant ' + (i+1),
+        category: i%2 ? 'Electrical' : 'Engine',
+        oemNo: '35200-KPE-900',
+        app: 'APP: POP-100, LH',
+        moq: 200,
+        deliveryDays: 20,
+        img: base + 'charging-port.jpg',
+        priceTiers: [
+          {min:1,max:1000,price:1.76},
+          {min:1000,max:10000,price:1.63},
+          {min:10000,max:null,price:1.50}
+        ]
+      }))
+    ];
+  }
+
+  return { init };
 })();
 
-document.addEventListener('DOMContentLoaded', App.init);
+document.addEventListener('DOMContentLoaded', CatalogApp.init);
