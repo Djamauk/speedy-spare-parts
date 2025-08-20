@@ -131,21 +131,6 @@ const fmtETB = (v) => ${v.toLocaleString()} ${state.lang==='am'?'ብር':'ETB'};
              
 function init() {
 document.documentElement.classList.add('smooth');
-$('#year').textContent = new Date().getFullYear();
-bindLanguageToggle();
-populateCategories();
-populateVehicleFinder();
-populateFilters();
-renderProducts();
-renderDealers();
-bindSearch();
-bindFilters();
-setupAnchorScroll();
-applyLanguage(); // set initial language
-}
-
-function init() {
-document.documentElement.classList.add('smooth');
 
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -159,7 +144,7 @@ renderDealers();
 bindSearch();
 bindFilters();
 setupAnchorScroll();
-applyLanguage(); // set initial language after DOM wiring
+applyLanguage();
 }
 
 function bindLanguageToggle() {
@@ -169,10 +154,8 @@ btn.addEventListener('click', () => {
 langButtons.forEach((b) => b.classList.remove('active'));
 btn.classList.add('active');
 const lang = btn.getAttribute('data-lang');
-// Fallback to 'en' if anything unexpected
 state.lang = lang === 'am' ? 'am' : 'en';
 applyLanguage();
-// Re-render any language-dependent UI
 renderProducts(true);
 renderDealers();
 populateCategories();
@@ -182,18 +165,15 @@ populateFilters();
 }
 
 function applyLanguage() {
-// Swap inner text for elements with data-en / data-am
 document.querySelectorAll('[data-en]').forEach((el) => {
 const en = el.getAttribute('data-en');
 const am = el.getAttribute('data-am');
-const out = state.lang === 'am' ? am : en;
-if (out !== null && out !== undefined) el.textContent = out;
+el.textContent = state.lang === 'am' ? (am ?? en ?? '') : (en ?? am ?? '');
 });
-// Swap placeholders
 document.querySelectorAll('[data-ph-en]').forEach((el) => {
 const phEn = el.getAttribute('data-ph-en');
 const phAm = el.getAttribute('data-ph-am');
-el.placeholder = state.lang === 'am' ? (phAm || phEn || '') : (phEn || phAm || '');
+el.placeholder = state.lang === 'am' ? (phAm ?? phEn ?? '') : (phEn ?? phAm ?? '');
 });
 }
 
@@ -247,7 +227,6 @@ alert(state.lang === 'am'
 }
 });
 }
-
 function populateCategories() {
 const wrap = $('#categoryGrid');
 wrap.innerHTML = '';
