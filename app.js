@@ -143,11 +143,32 @@ setupAnchorScroll();
 applyLanguage(); // set initial language
 }
 
+function init() {
+document.documentElement.classList.add('smooth');
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+bindLanguageToggle();
+populateCategories();
+populateVehicleFinder();
+populateFilters();
+renderProducts();
+renderDealers();
+bindSearch();
+bindFilters();
+setupAnchorScroll();
+applyLanguage(); // set initial language
+}
+
 function bindLanguageToggle() {
-('.lang-btn').forEach(btn=>{ btn.addEventListener('click', ()=>{ ('.lang-btn').forEach(b=>b.classList.remove('active'));
+const langButtons = document.querySelectorAll('.lang-btn');
+langButtons.forEach((btn) => {
+btn.addEventListener('click', () => {
+langButtons.forEach((b) => b.classList.remove('active'));
 btn.classList.add('active');
-state.lang = btn.dataset.lang;
+state.lang = btn.dataset.lang === 'am' ? 'am' : 'en';
 applyLanguage();
+// re-render sections that have language-dependent content
 renderProducts(true);
 renderDealers();
 populateCategories();
@@ -157,162 +178,15 @@ populateFilters();
 }
 
 function applyLanguage() {
-(
-′
-[
-d
-a
-t
-a
-−
-e
-n
-]
-′
-)
-.
-f
-o
-r
-E
-a
-c
-h
-(
-e
-l
-=
->
-c
-o
-n
-s
-t
-t
-e
-x
-t
-=
-s
-t
-a
-t
-e
-.
-l
-a
-n
-g
-=
-=
-=
-′
-a
-m
-′
-?
-e
-l
-.
-g
-e
-t
-A
-t
-t
-r
-i
-b
-u
-t
-e
-(
-′
-d
-a
-t
-a
-−
-a
-m
-′
-)
-:
-e
-l
-.
-g
-e
-t
-A
-t
-t
-r
-i
-b
-u
-t
-e
-(
-′
-d
-a
-t
-a
-−
-e
-n
-′
-)
-;
-i
-f
-(
-t
-e
-x
-t
-)
-e
-l
-.
-t
-e
-x
-t
-C
-o
-n
-t
-e
-n
-t
-=
-t
-e
-x
-t
-;
-)
-;
-( 
-′
- [data−en] 
-′
- ).forEach(el=>consttext=state.lang=== 
-′
- am 
-′
- ?el.getAttribute( 
-′
- data−am 
-′
- ):el.getAttribute( 
-′
- data−en 
-′
- );if(text)el.textContent=text;);('[data-ph-en]').forEach(el=>{
-el.placeholder = state.lang==='am' ? el.getAttribute('data-ph-am') : el.getAttribute('data-ph-en');
+// Text content swaps
+document.querySelectorAll('[data-en]').forEach((el) => {
+const txt = state.lang === 'am' ? el.getAttribute('data-am') : el.getAttribute('data-en');
+if (txt !== null && txt !== undefined) el.textContent = txt;
+});
+// Placeholder swaps
+document.querySelectorAll('[data-ph-en]').forEach((el) => {
+const ph = state.lang === 'am' ? el.getAttribute('data-ph-am') : el.getAttribute('data-ph-en');
+if (ph !== null && ph !== undefined) el.placeholder = ph;
 });
 }
 
@@ -327,10 +201,13 @@ wrap.appendChild(card);
 });
 }
 
-function populateVehicleFinder() {
-const makeSel = $('#makeSelect');
-const modelSel = $('#modelSelect');
-const yearSel = $('#yearSelect');
+const now = new Date().getFullYear();
+const endYear = Math.max(now, 2025);
+const years = [];
+for (let y = 2018; y <= endYear; y++) {
+years.push(y);
+}
+yearSel.innerHTML = years.map((y) => <option value="${y}">${y}</option>).join('');
 
 text
 makeSel.innerHTML = `<option value="">${state.lang==='am'?'ምርጫ አድርጉ':'Select Make'}</option>` + 
