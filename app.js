@@ -1,3 +1,4 @@
+----- BEGIN app.js -----
 /* Speedy Spare Parts - EV site (English/Amharic) */
 const App = (() => {
 // Application state
@@ -75,11 +76,10 @@ const fmtETB = (v) => ${v.toLocaleString()} ${state.lang === 'am' ? 'ብር' : '
 // Initialize app
 function init() {
 document.documentElement.classList.add('smooth');
-
-text
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+text
 bindLanguageToggle();
 populateCategories();
 populateVehicleFinder();
@@ -398,3 +398,4 @@ return { init };
 
 // Initialize after DOM is ready
 document.addEventListener('DOMContentLoaded', App.init);
+----- END app.js -----
