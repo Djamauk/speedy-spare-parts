@@ -1,171 +1,75 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <title>Speedy Spare Parts | EV Parts for Ethiopia</title> <meta name="description" content="Speedy Spare Parts — Premium Electric Vehicle parts for Ethiopia. Bilingual English/Amharic site with EV safety, compatibility, and local contact."/> <link rel="stylesheet" href="style.css"/> <link rel="icon" href="assets/icons/high-voltage.svg" type="image/svg+xml"/> </head> <body> <header class="header" id="home"> <div class="container header__wrap"> <div class="brand"> <div class="brand__logo">⚡</div> <div class="brand__name"> <h1 data-en="Speedy Spare Parts" data-am="ስፒዲ የክፍል እቃዎች">Speedy Spare Parts</h1> <p class="tagline" data-en="Powering Ethiopia's Electric Future" data-am="የኢትዮጲያን የኤሌክትሪክ ተሽከርካሪ ወደፊት እናንቀሳቅሳለን"> Powering Ethiopia's Electric Future </p> </div> </div>
-text
-  <nav class="nav">
-    <a href="#home" class="nav__link" data-en="Home" data-am="ዋና ገፅ">Home</a>
-    <a href="#categories" class="nav__link" data-en="EV Categories" data-am="የኤሌክትሪክ ተሽከርካሪ ክፍሎች">EV Categories</a>
-    <a href="#finder" class="nav__link" data-en="Vehicle Finder" data-am="ተሽከርካሪ መፈለጊያ">Vehicle Finder</a>
-    <a href="#dealers" class="nav__link" data-en="Dealers" data-am="ሻጮች">Dealers</a>
-    <a href="#about" class="nav__link" data-en="About" data-am="ስለ እኛ">About</a>
-    <a href="#contact" class="nav__link" data-en="Contact" data-am="አግኙን">Contact</a>
-  </nav>
-
-  <div class="header__actions">
-    <div class="search">
-      <input id="searchInput" type="text" class="search__input"
-             placeholder="Search EV parts..." 
-             data-ph-en="Search EV parts..." 
-             data-ph-am="የኤቪ ክፍሎችን ፈልግ..." />
-      <button id="searchBtn" class="btn btn--primary" data-en="Search" data-am="ፈልግ">Search</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Speedy Spare Parts — Catalog</title>
+  <meta name="description" content="Speedy Spare Parts product catalog with tiered pricing and quick view."/>
+  <link rel="stylesheet" href="catalog.css"/>
+  <link rel="icon" type="image/svg+xml" href="assets/icons/high-voltage.svg"/>
+</head>
+<body>
+  <header class="top">
+    <div class="top__brand">
+      <span class="logo">⚡</span>
+      <strong>Speedy Spare Parts</strong>
     </div>
 
-    <div class="lang-toggle">
-      <button class="lang-btn active" data-lang="en">🇺🇸 English</button>
-      <button class="lang-btn" data-lang="am">🇪🇹 አማርኛ</button>
+    <nav class="steps">
+      <div class="step active"><span>1</span> Product</div>
+      <div class="step"><span>2</span> Cart List</div>
+      <div class="step"><span>3</span> Proforma Invoice</div>
+      <div class="step"><span>4</span> Confirm Order</div>
+    </nav>
+
+    <div class="top__actions">
+      <input id="q" type="search" placeholder="Quick Find (OEM, APP, Title)"/>
+      <button id="searchBtn" class="btn">Search</button>
+      <a class="btn cart" href="#" id="openCart">🛒 <span id="cartCount">0</span></a>
     </div>
+  </header>
 
-    <button id="cartBtn" class="cart">
-      <span>🛒</span>
-      <span id="cartCount" class="cart__count">0</span>
-      <span class="cart__label" data-en="Cart" data-am="የግዢ ሳጥን">Cart</span>
-    </button>
-  </div>
-</div>
-</header> <main> <!-- Hero --> <section class="hero"> <img src="assets/hero-ev.jpg" alt="Electric Vehicle parts Ethiopia" class="hero__img" /> <div class="hero__overlay"> <h2 data-en="Premium EV Parts for Ethiopia" data-am="ለኢትዮጲያ ጥሩ የኤቪ ክፍሎች">Premium EV Parts for Ethiopia</h2> <p data-en="Safe, compatible, and ready to ship. Bilingual support included." data-am="ደህንነቱ የተጠበቀ፣ ተዛማጅ እና ዝግጁ ለመላክ። ሁለት ቋንቋ ድጋፍ ይገኛል።"> Safe, compatible, and ready to ship. Bilingual support included. </p> <a href="#categories" class="btn btn--accent" data-en="Browse Categories" data-am="ክፍሎችን ይመልከቱ">Browse Categories</a> </div> </section>
-text
-<!-- Safety Banner -->
-<section class="safety">
-  <img src="assets/icons/high-voltage.svg" alt="High voltage" class="safety__icon"/>
-  <div>
-    <p class="safety__text" data-en="⚠️ High Voltage — For professionals only."
-       data-am="⚠️ ከፍተኛ የኤሌክትሪክ ኃይል — ባለሙያዎች ብቻ ይንኩት።">
-       ⚠️ High Voltage — For professionals only.
-    </p>
-  </div>
-</section>
+  <main class="wrap">
+    <aside class="filters">
+      <h3>Filters</h3>
+      <label>Category
+        <select id="fCategory"><option value="">All</option></select>
+      </label>
+      <label>Max Price
+        <input type="number" id="fMaxPrice" min="0" value="9999"/>
+      </label>
+      <button id="applyFilters" class="btn">Apply</button>
+      <a class="link" href="index.html">← Back to Home</a>
+    </aside>
 
-<!-- Categories -->
-<section id="categories" class="section container">
-  <h3 class="section__title" data-en="EV Categories" data-am="የኤሌክትሪክ ተሽከርካሪ ክፍሎች">EV Categories</h3>
-  <div id="categoryGrid" class="grid grid--6"></div>
-</section>
+    <section class="catalog">
+      <div id="grid" class="grid"></div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </main>
 
-<!-- Vehicle Finder -->
-<section id="finder" class="section section--alt">
-  <div class="container">
-    <h3 class="section__title" data-en="Vehicle Finder" data-am="ተሽከርካሪ መፈለጊያ">Vehicle Finder</h3>
-    <div class="finder">
-      <select id="makeSelect"></select>
-      <select id="modelSelect" disabled></select>
-      <select id="yearSelect"></select>
-      <button id="findPartsBtn" class="btn btn--primary" data-en="Find EV Parts" data-am="የኤቪ ክፍሎችን ያግኙ">Find EV Parts</button>
-    </div>
-  </div>
-</section>
-
-<!-- Products -->
-<section class="section container">
-  <h3 class="section__title" data-en="Featured EV Parts" data-am="ተለይተው የቀረቡ የኤቪ ክፍሎች">Featured EV Parts</h3>
-  <div class="filters">
-    <div class="filter">
-      <label data-en="Category" data-am="ምድብ">Category</label>
-      <select id="filterCategory"></select>
-    </div>
-    <div class="filter">
-      <label data-en="Max Price" data-am="ከፍተኛ ዋጋ">Max Price</label>
-      <input type="number" id="filterPrice" min="0" value="30000"/>
-    </div>
-    <div class="filter">
-      <label data-en="Stock" data-am="መጋዘን">Stock</label>
-      <select id="filterStock">
-        <option value="any" data-en="Any" data-am="ማንኛውም">Any</option>
-        <option value="in" data-en="In Stock" data-am="በመጋዘን አለ">In Stock</option>
-        <option value="low" data-en="Low Stock" data-am="አነስተኛ መጠን">Low Stock</option>
-      </select>
-    </div>
-    <div class="filter">
-      <label data-en="Sort by" data-am="ደርድር እንደ">Sort by</label>
-      <select id="sortBy">
-        <option value="name" data-en="Name" data-am="ስም">Name</option>
-        <option value="priceAsc" data-en="Price: Low to High" data-am="ዋጋ፡ ታናሽ ወደ ታላቅ">Price: Low to High</option>
-        <option value="priceDesc" data-en="Price: High to Low" data-am="ዋጋ፡ ታላቅ ወደ ታናሽ">Price: High to Low</option>
-      </select>
-    </div>
-  </div>
-  <div id="productGrid" class="grid grid--4"></div>
-</section>
-
-<!-- Dealers -->
-<section id="dealers" class="section section--alt">
-  <div class="container">
-    <h3 class="section__title" data-en="Dealers" data-am="ሻጮች">Dealers</h3>
-    <div id="dealerList" class="dealer-list"></div>
-  </div>
-</section>
-
-<!-- About -->
-<section id="about" class="section container">
-  <h3 class="section__title" data-en="About Speedy Spare Parts" data-am="ስለ ስፒዲ የክፍል እቃዎች">About Speedy Spare Parts</h3>
-  <p data-en="Speedy Spare Parts supplies safe, compatible EV components for Ethiopia with bilingual support and local service."
-     data-am="ስፒዲ የክፍል እቃዎች ለኢትዮጲያ ደህንነቱ የተጠበቀ እና ተዛማጅ የኤቪ ክፍሎችን በሁለት ቋንቋ ድጋፍ እና በአካባቢ አገልግሎት ይሰጣል።">
-    Speedy Spare Parts supplies safe, compatible EV components for Ethiopia with bilingual support and local service.
-  </p>
-  <ul class="about__bullets">
-    <li data-en="Focus on safety and quality" data-am="በደህንነት እና በጥራት ላይ እንዳተኩራለን">Focus on safety and quality</li>
-    <li data-en="EV compatibility and technical clarity" data-am="የኤቪ ተዛማጅነት እና ቴክኒክ ግልጽነት">EV compatibility and technical clarity</li>
-    <li data-en="Local support and fast response" data-am="የአካባቢ ድጋፍ እና ፈጣን ምላሽ">Local support and fast response</li>
-  </ul>
-</section>
-
-<!-- Contact -->
-<section id="contact" class="section section--contact">
-  <div class="container contact__grid">
-    <div>
-      <h3 class="section__title" data-en="Contact" data-am="አግኙን">Contact</h3>
-      <p data-en="We respond quickly to inquiries about EV parts, orders, and compatibility." 
-         data-am="ስለ የኤቪ ክፍሎች፣ ትእዛዞች እና ተዛማጅነት ጥያቄዎች በፍጥነት እንመልሳለን።">
-        We respond quickly to inquiries about EV parts, orders, and compatibility.
-      </p>
-
-      <div class="contact__methods">
-        <a class="contact__btn" target="_blank" rel="noopener" 
-           href="https://wa.me/447752660256?text=Hello%20Speedy%20Spare%20Parts%20—%20I%E2%80%99m%20interested%20in%20EV%20parts"
-           aria-label="WhatsApp">
-          <img src="assets/icons/whatsapp.svg" alt="WhatsApp"/> WhatsApp: 00447752660256
-        </a>
-        <a class="contact__btn" href="mailto:djamauk@gmail.com?subject=EV%20Parts%20Inquiry&body=Hello%20Speedy%20Spare%20Parts,"
-           aria-label="Email">
-          <img src="assets/icons/email.svg" alt="Email"/> Email: djamauk@gmail.com
-        </a>
+  <template id="cardTpl">
+    <div class="card">
+      <div class="card__img"><img src="" alt="Product"/></div>
+      <div class="card__body">
+        <h4 class="title"></h4>
+        <div class="spec">
+          <div class="row"><span>OEM NO:</span><span class="oem"></span></div>
+          <div class="row"><span>APP:</span><span class="app"></span></div>
+          <div class="row"><span>MOQ:</span><span class="moq"></span></div>
+          <div class="row"><span>D.Date:</span><span class="dDate"></span></div>
+        </div>
+        <div class="tiers">
+          <div class="tiers__title">FOB Price (per piece)</div>
+          <div class="tierRows"></div>
+        </div>
+      </div>
+      <div class="card__actions">
+        <button class="btn buy">Buy Now</button>
       </div>
     </div>
+  </template>
 
-    <div>
-      <form id="contactForm" class="form" method="POST" action="https://formspree.io/f/mdkdrgkg">
-        <input type="hidden" name="_subject" value="New EV Parts Inquiry from Speedy Spare Parts" />
-        <div class="form__row">
-          <label data-en="Name" data-am="ስም">Name</label>
-          <input name="name" type="text" required placeholder="Your name"/>
-        </div>
-        <div class="form__row">
-          <label data-en="Phone" data-am="ስልክ">Phone</label>
-          <input name="phone" type="tel" placeholder="+251-..."/>
-        </div>
-        <div class="form__row">
-          <label data-en="Email" data-am="ኢሜል">Email</label>
-          <input name="email" type="email" required placeholder="name@example.com"/>
-        </div>
-        <div class="form__row">
-          <label data-en="Message" data-am="መልዕክት">Message</label>
-          <textarea name="message" rows="4" required placeholder="Order or inquiry details"></textarea>
-        </div>
-        <button class="btn btn--primary" type="submit" data-en="Send" data-am="ላክ">Send</button>
-        <p id="formStatus" class="form__status" aria-live="polite"></p>
-      </form>
-      <p class="form__note" data-en="Note: Replace the form action with your Formspree endpoint to receive emails."
-         data-am="ማስታወሻ፡ ኢሜሎችን ለመቀበል የፎርም እርምጃውን በየእርስዎ የFormspree መስመር ጫን ይቀይሩ።">
-         Note: Replace the form action with your Formspree endpoint to receive emails.
-      </p>
-    </div>
-  </div>
-</section>
-</main> <footer class="footer"> <div class="container footer__wrap"> <p>© <span id="year"></span> <span data-en="Speedy Spare Parts" data-am="ስፒዲ የክፍል እቃዎች">Speedy Spare Parts</span>. <span data-en="All rights reserved." data-am="መብቶች ሁሉ ተይዘዋል።">All rights reserved.</span> </p> </div> </footer> <script src="app.js"></script> </body> </html>
+  <script src="catalog.js"></script>
+</body>
+</html>
